@@ -4,6 +4,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.cocoapods)
+    alias(libs.plugins.skie)
 }
 
 kotlin {
@@ -15,21 +17,28 @@ kotlin {
     }
     
     jvm()
-    
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "Shared"
-            isStatic = true
+
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+    cocoapods {
+        summary = "Some description for the Shared Module"
+        homepage = "Link to the Shared Module homepage"
+        version = "1.0"
+        ios.deploymentTarget = "16.0"
+        podfile = project.file("../iosApp/Podfile")
+        framework {
+            baseName = "shared"
+            export(project(":feature:stremio"))
+            @OptIn(ExperimentalKotlinGradlePluginApi::class)
+            transitiveExport = true
         }
     }
     
     sourceSets {
         commonMain.dependencies {
-            // put your Multiplatform dependencies here
+            api(project(":feature:stremio"))
         }
     }
 }
