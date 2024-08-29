@@ -1,38 +1,13 @@
-package com.brisson
+package com.brisson.mock
 
 import com.brisson.model.BehaviorHints
 import com.brisson.model.Manifest
 import com.brisson.model.ResObject
 import com.brisson.model.ResString
-import io.ktor.client.engine.mock.*
-import io.ktor.http.*
 import io.ktor.utils.io.*
-import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
-class ManifestApiTest {
-    @Test
-    fun `Get Manifest Success`() = runTest {
-        val engine = MockEngine {
-            respond(
-                content = mockManifestJson,
-                status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, "application/json"),
-            )
-        }
-        val clientWrapper = ClientWrapper(engine)
-        val manifestApi = manifestApi(clientWrapper.client)
 
-        assertEquals(
-            expected = manifestApi.getManifest("addon-base-url.com"),
-            actual = mockManifestObject,
-            message = "Could not get manifest with success",
-        )
-    }
-}
-
-private val mockManifestObject = Manifest(
+val mockManifestObject = Manifest(
     id = "com.addon",
     name = "Addon",
     description = "Provides streams",
@@ -55,7 +30,7 @@ private val mockManifestObject = Manifest(
     version = "0.0.14",
 )
 
-private val mockManifestJson = ByteReadChannel(
+val mockManifestJson = ByteReadChannel(
     """
     {
       "id": "com.addon",
@@ -89,5 +64,5 @@ private val mockManifestJson = ByteReadChannel(
         "configurable": true,
         "configurationRequired": false
       }
-    }"""
+    }""".trimIndent()
 )

@@ -1,17 +1,24 @@
-package com.brisson
+package com.brisson.api
 
 import com.brisson.model.Manifest
+import com.brisson.model.SearchQueryResponse
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 
-interface ManifestApi {
+interface StremioApi {
     suspend fun getManifest(addonBaseUrl: String): Manifest
+    suspend fun search(url: String): SearchQueryResponse
 }
 
-fun manifestApi(
+// TODO: set to run with the IO dispatcher
+fun stremioApi(
     client: HttpClient,
-) = object : ManifestApi {
+) = object : StremioApi {
     override suspend fun getManifest(addonBaseUrl: String): Manifest =
         client.get("https://$addonBaseUrl/manifest.json").body()
+
+    override suspend fun search(url: String): SearchQueryResponse =
+        client.get(url).body()
+
 }
