@@ -5,22 +5,22 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchQueryResponse(
-    val query: String,
-    val rank: Double,
-    val cacheMaxAge: Long,
+    val query: String?,
+    val rank: Double?,
+    val cacheMaxAge: Long?,
     val metas: List<Meta>,
 )
 
 @Serializable
 data class Metas(
-    val metas: List<Meta>
+    val metas: List<Meta>,
 )
 
 @Serializable
 data class Meta(
     val awards: String?,
     val background: String?,
-    val behaviorHints: BehaviorHints,
+    val behaviorHints: BehaviorHints?,
     val cast: List<String>?,
     val country: String?,
     val description: String?,
@@ -29,15 +29,15 @@ data class Meta(
     val genres: List<String>?,
     val id: String,
     val imdbRating: String?,
-    @SerialName("imdb_id") val imdbId: String,
-    val links: List<Link>,
+    @SerialName("imdb_id") val imdbId: String?,
+    val links: List<Link>?,
     val logo: String?,
     @SerialName("moviedb_id") val movieDbId: Int?,
     val name: String,
     val popularities: Popularities?,
     val popularity: Double?,
     val poster: String?,
-    val releaseInfo: String,
+    val releaseInfo: String?,
     val released: String?,
     val runtime: String?,
     val slug: String?,
@@ -62,21 +62,21 @@ data class Meta(
 
     @Serializable
     data class Popularities(
-        @SerialName("moviedb") val movieDb: Double,
-        val stremio: Double,
-        @SerialName("stremio_lib") val stremioLib: Int,
+        @SerialName("moviedb") val movieDb: Double?,
+        val stremio: Double?,
+        @SerialName("stremio_lib") val stremioLib: Double?,
         val trakt: Int?,
     )
 
     @Serializable
     data class TrailerStream(
-        val title: String,
-        val ytId: String
+        val title: String?,
+        val ytId: String?,
     )
 
     @Serializable
     data class Trailer(
-        val source: String,
-        val type: String
+        val source: String?,
+        val type: String?,
     )
 }

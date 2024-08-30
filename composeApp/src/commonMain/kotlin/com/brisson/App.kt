@@ -114,7 +114,7 @@ private fun HomeScreen(
             is HomeViewState.Loading -> {}
             is HomeViewState.Error -> {}
             is HomeViewState.Content -> {
-                items(uiState.sections.toList()) { (title, section) ->
+                items(uiState.sections.toList()) { (title, metas) ->
                     Text(
                         modifier = Modifier.padding(bottom = 12.dp, top = 24.dp, start = 16.dp),
                         text = title,
@@ -125,7 +125,7 @@ private fun HomeScreen(
                     LazyRow(
                         contentPadding = PaddingValues(horizontal = 16.dp),
                     ) {
-                        items(section.metas) { meta ->
+                        items(metas) { meta ->
                             (meta.poster ?: meta.background ?: meta.logo)?.let { imageUrl ->
                                 val painterResource: Resource<Painter> = asyncPainterResource(imageUrl)
                                 KamelImage(
