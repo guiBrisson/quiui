@@ -49,8 +49,8 @@ data class Meta(
 ) {
     @Serializable
     data class BehaviorHints(
-        val defaultVideoId: String,
-        val hasScheduledVideos: Boolean
+        val defaultVideoId: String?,
+        val hasScheduledVideos: Boolean?,
     )
 
     @Serializable
@@ -65,7 +65,7 @@ data class Meta(
         @SerialName("moviedb") val movieDb: Double,
         val stremio: Double,
         @SerialName("stremio_lib") val stremioLib: Int,
-        val trakt: Int
+        val trakt: Int?,
     )
 
     @Serializable

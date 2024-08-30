@@ -37,8 +37,16 @@ kotlin {
     }
     
     sourceSets {
+        androidMain.dependencies {
+
+        }
+
         commonMain.dependencies {
-            api(project(":feature:stremio"))
+            implementation(project(":feature:stremio"))
+
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.client.core)
+            implementation(libs.koin.core)
         }
     }
 }

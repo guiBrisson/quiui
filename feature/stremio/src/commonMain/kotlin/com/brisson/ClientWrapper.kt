@@ -5,10 +5,12 @@ import io.ktor.client.engine.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 
 
 class ClientWrapper(engine: HttpClientEngine) : AutoCloseable {
+    @OptIn(ExperimentalSerializationApi::class)
     val client: HttpClient = HttpClient(engine) {
         install(ContentNegotiation) {
             json(Json {

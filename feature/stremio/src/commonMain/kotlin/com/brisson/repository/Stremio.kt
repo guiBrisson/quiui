@@ -25,16 +25,17 @@ interface Stremio {
     fun search(query: String): Flow<Map<String, SearchQueryResponse>>
 }
 
+//TODO: add proper logging
 fun stremio(
     api: StremioApi,
+    addonPersistence: AddonPersistence,
 ) = object : Stremio {
-    private val addonPersistence: AddonPersistence = addonPersistenceInMemory(api)
-
     override fun search(query: String): Flow<Map<String, SearchQueryResponse>> = flow {
         addonPersistence.loadAddons().forEach { addon ->
             addon.manifest.searchUrls(addon.baseUrl, query)?.forEach { (title, url) ->
                 val response = api.search(url)
                 emit(mapOf(title to response))
+                println("Stremio: Searching $query with $title: ${response.metas.size} response")
             }
         }
     }

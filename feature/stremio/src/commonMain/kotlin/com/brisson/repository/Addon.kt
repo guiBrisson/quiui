@@ -9,6 +9,7 @@ interface AddonPersistence {
     suspend fun saveAddon(addonBaseUrl: String)
 }
 
+//TODO: add proper logging
 fun addonPersistenceInMemory(
     api: StremioApi
 ) = object : AddonPersistence {
@@ -18,6 +19,8 @@ fun addonPersistenceInMemory(
 
     override suspend fun saveAddon(addonBaseUrl: String) {
         val manifest = api.getManifest(addonBaseUrl)
-        _addons.add(Addon(addonBaseUrl, manifest))
+        val addon = Addon(addonBaseUrl, manifest)
+        _addons.add(addon)
+        println("AddonPersistenceInMemory: saving addon ${addon.manifest.name}")
     }
 }
