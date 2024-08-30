@@ -20,7 +20,7 @@ data class Catalog(
     )
 }
 
-private fun Catalog.urlBuilder(addonBaseUrl: String, endParam: String?): String = StringBuilder().apply {
+private fun Catalog.urlBuilder(addonBaseUrl: String, endParam: String? = null): String = StringBuilder().apply {
     append("https://$addonBaseUrl/catalog/$type/$id")
     endParam?.let { append("/$it") }
     append(".json")
@@ -28,5 +28,13 @@ private fun Catalog.urlBuilder(addonBaseUrl: String, endParam: String?): String 
 
 private fun Catalog.canSearch(): Boolean = extra?.firstOrNull { ex -> ex.name == "search" } != null
 
+private fun Catalog.hasExtraRequired(): Boolean =
+    extraRequired?.isNotEmpty() == true || extra?.firstOrNull { ex -> ex.isRequired == true } != null
+
+
 fun Catalog.searchUrl(addonBaseUrl: String, query: String): String? =
     if (canSearch()) urlBuilder(addonBaseUrl, endParam = "search=$query") else null
+
+fun Catalog.homeUrl(addonBaseUrl: String): String? =
+    if (!hasExtraRequired()) { urlBuilder(addonBaseUrl) } else null
+

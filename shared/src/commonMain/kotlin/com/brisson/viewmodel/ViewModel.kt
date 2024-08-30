@@ -12,7 +12,7 @@ open class ViewModel: KoinComponent {
     protected open val viewmodelScope = MainScope()
 
     open fun onDispose() {
-        logger.d { "Disposing ViewModel: ${this::class.simpleName}" }
+        logger.d { "Disposing ViewModel" }
         viewmodelScope.cancel()
     }
 }
