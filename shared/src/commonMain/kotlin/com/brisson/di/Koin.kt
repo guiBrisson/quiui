@@ -4,6 +4,7 @@ import co.touchlab.kermit.Logger
 import co.touchlab.kermit.StaticConfig
 import co.touchlab.kermit.platformLogWriter
 import com.brisson.ClientWrapper
+import com.brisson.Database
 import com.brisson.api.StremioApi
 import com.brisson.api.stremioApi
 import com.brisson.getClientEngine
@@ -11,18 +12,20 @@ import com.brisson.repository.AddonPersistence
 import com.brisson.repository.Stremio
 import com.brisson.repository.addonPersistenceInMemory
 import com.brisson.repository.stremio
+import com.brisson.service.AddonService
 import com.brisson.viewmodel.HomeViewModel
-import io.ktor.client.*
+import io.ktor.client.HttpClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
-import org.koin.core.parameter.parametersOf
-import org.koin.core.scope.Scope
 import org.koin.dsl.module
 
 fun initKoin(appModule: Module? = null): KoinApplication = startKoin {
     appModule?.let { modules(it) }
     modules(
+        platformModule,
         coreModule,
         stremioModule,
         viewModelModule,
@@ -40,6 +43,20 @@ private val coreModule = module {
     val baseLogger =
         Logger(config = StaticConfig(logWriterList = listOf(platformLogWriter())), "quiui")
     factory<Logger> { (tag: String?) -> if (tag != null) baseLogger.withTag(tag) else baseLogger }
+
+    includes(databaseModule)
+}
+
+private val databaseModule = module {
+    single<Database> {
+        Database(
+            sqlDriver = get(),
+            log = getWith("Database"),
+            dispatcher = Dispatchers.IO,
+        )
+    }
+
+    single<AddonService> { fromDatabase().addonService }
 }
 
 private val stremioModule = module {
@@ -57,8 +74,4 @@ private val stremioModule = module {
 
 private val viewModelModule = module {
     single<HomeViewModel> { HomeViewModel(stremio = get(), addonPersistence = get()) }
-}
-
-internal inline fun <reified T> Scope.getWith(vararg params: Any?): T {
-    return get(parameters = { parametersOf(*params) })
 }

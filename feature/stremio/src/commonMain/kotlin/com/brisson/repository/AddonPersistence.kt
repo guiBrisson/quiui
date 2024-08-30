@@ -7,7 +7,7 @@ import com.brisson.model.Addon
 
 interface AddonPersistence {
     suspend fun loadAddons(): List<Addon>
-    suspend fun saveAddon(addonBaseUrl: String)
+    suspend fun saveAddon(vararg addonBaseUrl: String)
 }
 
 fun addonPersistenceInMemory(
@@ -18,10 +18,12 @@ fun addonPersistenceInMemory(
 
     override suspend fun loadAddons(): List<Addon> = _addons
 
-    override suspend fun saveAddon(addonBaseUrl: String) {
-        val manifest = api.getManifest(addonBaseUrl)
-        val addon = Addon(addonBaseUrl, manifest)
-        _addons.add(addon)
-        logger.i { "Saving addon ${addon.manifest.name}" }
+    override suspend fun saveAddon(vararg addonBaseUrl: String) {
+        addonBaseUrl.forEach { baseUrl ->
+            val manifest = api.getManifest(baseUrl)
+            val addon = Addon(baseUrl, manifest)
+            _addons.add(addon)
+            logger.i { "Saving addon ${addon.manifest.name}" }
+        }
     }
 }

@@ -126,7 +126,7 @@ private fun HomeScreen(
                         contentPadding = PaddingValues(horizontal = 16.dp),
                     ) {
                         items(metas) { meta ->
-                            (meta.poster ?: meta.background ?: meta.logo)?.let { imageUrl ->
+                            (meta.poster ?: meta.background)?.let { imageUrl ->
                                 val painterResource: Resource<Painter> = asyncPainterResource(imageUrl)
                                 KamelImage(
                                     modifier = Modifier.size(width = 138.dp, height = 202.dp),

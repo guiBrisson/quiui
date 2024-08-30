@@ -4,8 +4,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.cocoapods)
+    alias(libs.plugins.sqlDelight)
 }
 
 kotlin {
@@ -27,13 +27,10 @@ kotlin {
         homepage = "Link to the Shared Module homepage"
         version = "1.0"
         ios.deploymentTarget = "16.0"
-        podfile = project.file("../iosApp/Podfile")
+        podfile = project.file("../../iosApp/Podfile")
         framework {
-            baseName = "shared"
-            export(project(":feature:stremio"))
-            export(libs.kermit.simple)
-            @OptIn(ExperimentalKotlinGradlePluginApi::class)
-            transitiveExport = true
+            baseName = "database"
+            isStatic = true
         }
     }
     
@@ -42,29 +39,27 @@ kotlin {
             implementation(libs.sqlDelight.android)
         }
 
-        jvmMain.dependencies {
-            implementation(libs.sqlDelight.jvm)
-//            implementation(libs.kotlinx.coroutines.swing)
+        commonMain.dependencies {
+            implementation(libs.sqlDelight.coroutinesExt)
+            implementation(libs.kermit)
         }
 
-        commonMain.dependencies {
-            api(projects.core.database)
-            api(projects.feature.stremio)
+        commonTest.dependencies {
 
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.ktor.client.core)
-            implementation(libs.koin.core)
-            api(libs.kermit)
+        }
+
+        jvmMain.dependencies {
+            implementation(libs.sqlDelight.jvm)
         }
 
         iosMain.dependencies {
-            api(libs.kermit.simple)
+            implementation(libs.sqlDelight.native)
         }
     }
 }
 
 android {
-    namespace = "com.brisson.shared"
+    namespace = "com.brisson.core"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -72,5 +67,11 @@ android {
     }
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
+    }
+}
+
+sqldelight {
+    databases.create("QuiuiDatabase") {
+        packageName.set("com.brisson.db")
     }
 }

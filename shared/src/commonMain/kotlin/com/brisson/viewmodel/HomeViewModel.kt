@@ -16,8 +16,10 @@ class HomeViewModel(
 
     init {
         viewmodelScope.launch {
-            addonPersistence.saveAddon("v3-cinemeta.strem.io")
-            addonPersistence.saveAddon("150203dd784e-cinetorrent-addon.baby-beamup.club")
+            addonPersistence.saveAddon(
+                "v3-cinemeta.strem.io",
+                "150203dd784e-cinetorrent-addon.baby-beamup.club"
+            )
             getHomeCatalog()
         }
     }
