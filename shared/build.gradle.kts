@@ -43,7 +43,7 @@ kotlin {
         }
 
         commonMain.dependencies {
-            implementation(project(":feature:stremio"))
+            api(project(":feature:stremio"))
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.ktor.client.core)

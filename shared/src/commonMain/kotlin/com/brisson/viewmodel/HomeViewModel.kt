@@ -20,6 +20,7 @@ class HomeViewModel(
     }
 
     fun search(query: String) {
+        mutableHomeState.update { HomeViewState.Loading }
         logger.i { "Searching query \"$query\"" }
         viewmodelScope.launch {
             stremio.search(query)
@@ -47,19 +48,8 @@ class HomeViewModel(
 }
 
 sealed class HomeViewState {
-    abstract val isLoading: Boolean
-
-    data object Initial : HomeViewState() {
-        override val isLoading: Boolean = true
-    }
-
-    data class Content(
-        val sections: Map<String, SearchQueryResponse>,
-        override val isLoading: Boolean = false
-    ) : HomeViewState()
-
-    data class Error(
-        val message: String,
-        override val isLoading: Boolean = false
-    ) : HomeViewState()
+    data object Initial : HomeViewState()
+    data object Loading : HomeViewState()
+    data class Content(val sections: Map<String, SearchQueryResponse>) : HomeViewState()
+    data class Error(val message: String) : HomeViewState()
 }
