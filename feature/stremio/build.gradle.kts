@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.cocoapods)
-    alias(libs.plugins.skie)
 }
 
 kotlin {
@@ -28,7 +27,7 @@ kotlin {
         homepage = "Link to the Shared Module homepage"
         version = "1.0"
         ios.deploymentTarget = "16.0"
-        podfile = project.file("../iosApp/Podfile")
+        podfile = project.file("../../iosApp/Podfile")
         framework {
             baseName = "stremio"
             isStatic = true
@@ -41,7 +40,6 @@ kotlin {
         }
 
         commonMain.dependencies {
-            implementation(libs.kotlinx.serialization)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
