@@ -36,7 +36,7 @@ data class Meta(
     val name: String,
     val popularities: Popularities?,
     val popularity: Double?,
-    val poster: String,
+    val poster: String?,
     val releaseInfo: String,
     val released: String?,
     val runtime: String?,

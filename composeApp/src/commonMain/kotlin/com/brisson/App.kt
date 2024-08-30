@@ -1,9 +1,6 @@
 package com.brisson
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
@@ -55,22 +52,23 @@ private fun HomeScreen(
 ) {
     var text by remember { mutableStateOf("") }
     Column(modifier) {
-        TextField(
-            value = text,
-            onValueChange = { text = it },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = { onSearch(text) }),
-        )
+        Row() {
+            TextField(
+                value = text,
+                onValueChange = { text = it },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = { onSearch(text) }),
+            )
+
+            TextButton(onClick = { onSearch(text) }) {
+                Text("Search")
+            }
+        }
+        Text("isLoading: ${uiState.isLoading}")
 
         Text(
             modifier = Modifier.padding(top = 20.dp),
             text = uiState.toString(),
         )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        TextButton(onClick = { onSearch(text) }) {
-            Text("Search")
-        }
     }
 }

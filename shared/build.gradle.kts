@@ -31,6 +31,7 @@ kotlin {
         framework {
             baseName = "shared"
             export(project(":feature:stremio"))
+            export(libs.kermit.simple)
             @OptIn(ExperimentalKotlinGradlePluginApi::class)
             transitiveExport = true
         }
@@ -47,6 +48,11 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.ktor.client.core)
             implementation(libs.koin.core)
+            api(libs.kermit)
+        }
+
+        iosMain.dependencies {
+            api(libs.kermit.simple)
         }
     }
 }

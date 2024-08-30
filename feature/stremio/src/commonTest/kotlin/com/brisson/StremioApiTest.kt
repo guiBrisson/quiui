@@ -1,5 +1,9 @@
 package com.brisson
 
+import co.touchlab.kermit.LogWriter
+import co.touchlab.kermit.Logger
+import co.touchlab.kermit.LoggerConfig
+import co.touchlab.kermit.Severity
 import com.brisson.api.stremioApi
 import com.brisson.mock.mockManifestJson
 import com.brisson.mock.mockManifestObject
@@ -12,6 +16,14 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class StremioApiTest {
+    private val emptyLogger = Logger(
+        config = object : LoggerConfig {
+            override val logWriterList: List<LogWriter> = emptyList()
+            override val minSeverity: Severity = Severity.Assert
+        },
+        tag = ""
+    )
+
     @Test
     fun `Get Manifest Success`() = runTest {
         val engine = MockEngine {
@@ -21,7 +33,7 @@ class StremioApiTest {
                 headers = headersOf(HttpHeaders.ContentType, "application/json"),
             )
         }
-        val clientWrapper = ClientWrapper(engine)
+        val clientWrapper = ClientWrapper(engine, emptyLogger)
         val stremioApi = stremioApi(clientWrapper.client)
 
         assertEquals(
@@ -40,7 +52,7 @@ class StremioApiTest {
                 headers = headersOf(HttpHeaders.ContentType, "application/json"),
             )
         }
-        val clientWrapper = ClientWrapper(engine)
+        val clientWrapper = ClientWrapper(engine, emptyLogger)
         val stremioApi = stremioApi(clientWrapper.client)
 
         assertEquals(

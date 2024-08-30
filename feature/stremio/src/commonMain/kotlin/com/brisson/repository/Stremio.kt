@@ -1,5 +1,6 @@
 package com.brisson.repository
 
+import co.touchlab.kermit.Logger
 import com.brisson.api.StremioApi
 import com.brisson.model.SearchQueryResponse
 import com.brisson.model.searchUrls
@@ -25,17 +26,17 @@ interface Stremio {
     fun search(query: String): Flow<Map<String, SearchQueryResponse>>
 }
 
-//TODO: add proper logging
 fun stremio(
     api: StremioApi,
     addonPersistence: AddonPersistence,
+    logger: Logger,
 ) = object : Stremio {
     override fun search(query: String): Flow<Map<String, SearchQueryResponse>> = flow {
         addonPersistence.loadAddons().forEach { addon ->
             addon.manifest.searchUrls(addon.baseUrl, query)?.forEach { (title, url) ->
                 val response = api.search(url)
                 emit(mapOf(title to response))
-                println("Stremio: Searching $query with $title: ${response.metas.size} response")
+                logger.i { "Searching \"$query\" with $title: ${response.metas.size} results" }
             }
         }
     }

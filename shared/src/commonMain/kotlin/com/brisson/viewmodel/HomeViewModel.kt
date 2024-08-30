@@ -20,7 +20,7 @@ class HomeViewModel(
     }
 
     fun search(query: String) {
-        println("HomeViewModel: Search $query")
+        logger.i { "Searching query \"$query\"" }
         viewmodelScope.launch {
             stremio.search(query)
                 .onEach { result ->
@@ -38,6 +38,7 @@ class HomeViewModel(
                     mutableHomeState.update {
                         HomeViewState.Error(message = t.message ?: "An unknown error occurred")
                     }
+                    logger.w(throwable = t) { "Search caught an error" }
                 }
                 .collect()
         }
