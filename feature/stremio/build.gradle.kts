@@ -27,24 +27,45 @@ kotlin {
         homepage = "Link to the Shared Module homepage"
         version = "1.0"
         ios.deploymentTarget = "16.0"
-        podfile = project.file("../iosApp/Podfile")
+        podfile = project.file("../../iosApp/Podfile")
         framework {
-            baseName = "shared"
-            export(project(":feature:stremio"))
-            @OptIn(ExperimentalKotlinGradlePluginApi::class)
-            transitiveExport = true
+            baseName = "stremio"
+            isStatic = true
         }
     }
     
     sourceSets {
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+        }
+
         commonMain.dependencies {
-            api(project(":feature:stremio"))
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.serialization)
+            implementation(libs.ktor.client.logging)
+        }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.ktor.client.mock)
+        }
+
+        jvmMain.dependencies {
+            implementation(libs.ktor.client.cio)
+            implementation(libs.kotlinx.coroutines.swing)
+        }
+
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
     }
 }
 
 android {
-    namespace = "com.brisson.shared"
+    namespace = "com.brisson.feature"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
