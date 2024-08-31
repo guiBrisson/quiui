@@ -30,7 +30,8 @@ kotlin {
         podfile = project.file("../iosApp/Podfile")
         framework {
             baseName = "shared"
-            export(project(":feature:stremio"))
+            linkerOpts("-lsqlite3")
+            export(projects.feature.stremio)
             export(libs.kermit.simple)
             @OptIn(ExperimentalKotlinGradlePluginApi::class)
             transitiveExport = true
