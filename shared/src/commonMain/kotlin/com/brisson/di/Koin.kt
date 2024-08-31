@@ -9,7 +9,7 @@ import com.brisson.api.stremioApi
 import com.brisson.getClientEngine
 import com.brisson.repository.AddonPersistence
 import com.brisson.repository.Stremio
-import com.brisson.repository.addonPersistenceInMemory
+import com.brisson.repository.addonPersistence
 import com.brisson.repository.stremio
 import com.brisson.viewmodel.HomeViewModel
 import io.ktor.client.HttpClient
@@ -48,10 +48,7 @@ private val stremioModule = module {
 
     single<StremioApi> { stremioApi(client = get()) }
 
-    single<AddonPersistence> {
-        //TODO: replace with a proper persistence implementation
-        addonPersistenceInMemory(api = get(), logger = getWith("AddonPersistence"))
-    }
+    single<AddonPersistence> { addonPersistence(api = get(), addonService = get()) }
 
     single<Stremio> { stremio(api = get(), addonPersistence = get(), logger = getWith("Stremio")) }
 }

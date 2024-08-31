@@ -9,7 +9,7 @@ interface AddonService {
     suspend fun getAllAddons(): List<Addon>
     suspend fun getAddonById(id: Long): Addon?
     suspend fun getAddonByTransportUrl(url: String): Addon?
-    suspend fun saveAddon(vararg addons: Addon)
+    suspend fun saveAddon(transportUrl: String, manifestEncoded: String)
     suspend fun deleteAddonById(id: Long)
     suspend fun deleteAddonByTransportUrl(url: String)
 }
@@ -29,13 +29,11 @@ fun DatabaseScope.addonService() = object : AddonService {
     override suspend fun getAddonByTransportUrl(url: String): Addon? =
         query.selectAddonByTransportUrl(url).executeAsOneOrNull()
 
-    override suspend fun saveAddon(vararg addons: Addon) =
+    override suspend fun saveAddon(transportUrl: String, manifestEncoded: String) =
         databaseRef.transactionWithContext(backgroundDispatcher) {
-            addons.forEach { addon ->
-                query.insertAddon(addon.transportUrl, addon.manifest)
-            }
+            query.insertAddon(transportUrl, manifestEncoded)
         }.also {
-            log.i { "Inserting ${addons.size} addons into database" }
+            log.i { "Inserting $transportUrl addons into database" }
         }
 
     override suspend fun deleteAddonById(id: Long) =

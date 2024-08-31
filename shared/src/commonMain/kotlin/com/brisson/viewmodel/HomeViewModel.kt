@@ -48,6 +48,11 @@ class HomeViewModel(
     }
 
     fun search(query: String) {
+        if (query.isEmpty()) {
+            getHomeCatalog()
+            return
+        }
+
         mutableHomeState.update { HomeViewState.Loading }
         logger.i { "Searching query \"$query\"" }
         viewmodelScope.launch {

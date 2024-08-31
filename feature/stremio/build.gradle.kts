@@ -40,6 +40,7 @@ kotlin {
         }
 
         commonMain.dependencies {
+            implementation(projects.core.database)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.bundles.ktor.client.common)
             implementation(libs.kermit)

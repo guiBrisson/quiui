@@ -1,6 +1,6 @@
-CREATE TABLE Addon (
+CREATE TABLE IF NOT EXISTS Addon (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    transportUrl TEXT NOT NULL,
+    transportUrl TEXT NOT NULL UNIQUE,
     manifest TEXT NOT NULL
 );
 
@@ -15,7 +15,7 @@ selectAddonByTransportUrl:
 SELECT * FROM Addon WHERE transportUrl = ?;
 
 insertAddon:
-INSERT INTO Addon (
+INSERT OR REPLACE INTO Addon (
     transportUrl,
     manifest
 ) VALUES (?, ?);
