@@ -4,8 +4,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.cocoapods)
+    alias(libs.plugins.sqlDelight)
 }
 
 kotlin {
@@ -29,42 +29,39 @@ kotlin {
         ios.deploymentTarget = "16.0"
         podfile = project.file("../../iosApp/Podfile")
         framework {
-            baseName = "stremio"
+            baseName = "database"
             isStatic = true
         }
     }
     
     sourceSets {
         androidMain.dependencies {
-            implementation(libs.ktor.client.okhttp)
+            implementation(libs.sqlDelight.android)
         }
 
         commonMain.dependencies {
-            implementation(projects.core.database)
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.bundles.ktor.client.common)
+
+            implementation(libs.sqlDelight.coroutinesExt)
+            implementation(libs.koin.core)
             implementation(libs.kermit)
         }
 
         commonTest.dependencies {
-            implementation(libs.kotlin.test)
-            implementation(libs.kotlinx.coroutines.test)
-            implementation(libs.ktor.client.mock)
+
         }
 
         jvmMain.dependencies {
-            implementation(libs.ktor.client.cio)
-            implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.sqlDelight.jvm)
         }
 
         iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
+            implementation(libs.sqlDelight.native)
         }
     }
 }
 
 android {
-    namespace = "com.brisson.feature"
+    namespace = "com.brisson.core"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -72,5 +69,11 @@ android {
     }
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
+    }
+}
+
+sqldelight {
+    databases.create("QuiuiDatabase") {
+        packageName.set("com.brisson.db")
     }
 }

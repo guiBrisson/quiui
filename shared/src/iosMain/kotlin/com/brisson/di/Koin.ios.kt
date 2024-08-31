@@ -11,5 +11,5 @@ actual val platformModule: Module = module {
 
 @Suppress("unused") // Called from Swift
 object KotlinDependencies : KoinComponent {
-    fun getBreedViewModel() = getKoin().get<HomeViewModel>()
+    fun getHomeViewModel() = getKoin().get<HomeViewModel>()
 }

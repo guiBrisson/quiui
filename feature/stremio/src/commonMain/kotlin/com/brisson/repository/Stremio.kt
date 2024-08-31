@@ -46,7 +46,8 @@ fun stremio(
     }
 
     override fun homePageCatalog(): Flow<Map<String, List<Meta>>> = flow {
-        addonPersistence.loadAddons().forEach { addon ->
+        val addons = addonPersistence.loadAddons()
+        addons.forEach { addon ->
             addon.manifest.homeUrls(addon.baseUrl)?.forEach { (title, url) ->
                 val response = api.home(url)
                 emit(mapOf(title to response.metas))

@@ -42,8 +42,13 @@ kotlin {
 
         }
 
+        jvmMain.dependencies {
+//            implementation(libs.kotlinx.coroutines.swing)
+        }
+
         commonMain.dependencies {
-            api(project(":feature:stremio"))
+            api(projects.core.database)
+            api(projects.feature.stremio)
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.ktor.client.core)
