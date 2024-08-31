@@ -39,11 +39,10 @@ kotlin {
     
     sourceSets {
         androidMain.dependencies {
-            implementation(libs.sqlDelight.android)
+
         }
 
         jvmMain.dependencies {
-            implementation(libs.sqlDelight.jvm)
 //            implementation(libs.kotlinx.coroutines.swing)
         }
 

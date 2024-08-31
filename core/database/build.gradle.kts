@@ -40,7 +40,9 @@ kotlin {
         }
 
         commonMain.dependencies {
+
             implementation(libs.sqlDelight.coroutinesExt)
+            implementation(libs.koin.core)
             implementation(libs.kermit)
         }
 

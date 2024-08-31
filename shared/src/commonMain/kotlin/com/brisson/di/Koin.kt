@@ -4,7 +4,6 @@ import co.touchlab.kermit.Logger
 import co.touchlab.kermit.StaticConfig
 import co.touchlab.kermit.platformLogWriter
 import com.brisson.ClientWrapper
-import com.brisson.Database
 import com.brisson.api.StremioApi
 import com.brisson.api.stremioApi
 import com.brisson.getClientEngine
@@ -12,11 +11,8 @@ import com.brisson.repository.AddonPersistence
 import com.brisson.repository.Stremio
 import com.brisson.repository.addonPersistenceInMemory
 import com.brisson.repository.stremio
-import com.brisson.service.AddonService
 import com.brisson.viewmodel.HomeViewModel
 import io.ktor.client.HttpClient
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -44,19 +40,7 @@ private val coreModule = module {
         Logger(config = StaticConfig(logWriterList = listOf(platformLogWriter())), "quiui")
     factory<Logger> { (tag: String?) -> if (tag != null) baseLogger.withTag(tag) else baseLogger }
 
-    includes(databaseModule)
-}
-
-private val databaseModule = module {
-    single<Database> {
-        Database(
-            sqlDriver = get(),
-            log = getWith("Database"),
-            dispatcher = Dispatchers.IO,
-        )
-    }
-
-    single<AddonService> { fromDatabase().addonService }
+    includes(dbModule)
 }
 
 private val stremioModule = module {
