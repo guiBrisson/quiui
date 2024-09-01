@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Catalog(
     val id: String,
-    val name: String,
+    val name: String?,
     val type: String,
     val genres: List<String>?,
     val extra: List<Extra>?,
@@ -16,7 +16,7 @@ data class Catalog(
     data class Extra(
         val name: String,
         val isRequired: Boolean?,
-        val options: List<String>?,
+//        val options: List<String>? = null,
     )
 }
 

@@ -10,9 +10,9 @@ sealed interface ResourceType
 
 @Serializable
 data class ResObject(
-    val name: String,
-    val types: List<String>,
-    val idPrefixes: List<String>
+    val name: String?,
+    val types: List<String>?,
+    val idPrefixes: List<String>?,
 ) : ResourceType
 
 @Serializable

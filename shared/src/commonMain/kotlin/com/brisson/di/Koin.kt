@@ -4,13 +4,17 @@ import co.touchlab.kermit.Logger
 import co.touchlab.kermit.StaticConfig
 import co.touchlab.kermit.platformLogWriter
 import com.brisson.ClientWrapper
+import com.brisson.api.AddonApi
 import com.brisson.api.StremioApi
+import com.brisson.api.addonApi
 import com.brisson.api.stremioApi
 import com.brisson.getClientEngine
-import com.brisson.repository.AddonPersistence
-import com.brisson.repository.Stremio
-import com.brisson.repository.addonPersistence
-import com.brisson.repository.stremio
+import com.brisson.AddonPersistence
+import com.brisson.repository.StremioRepository
+import com.brisson.addonPersistence
+import com.brisson.repository.AddonRepository
+import com.brisson.repository.addonRepository
+import com.brisson.repository.stremioRepository
 import com.brisson.viewmodel.HomeViewModel
 import io.ktor.client.HttpClient
 import org.koin.core.KoinApplication
@@ -48,11 +52,27 @@ private val stremioModule = module {
 
     single<StremioApi> { stremioApi(client = get()) }
 
+    single<AddonApi> { addonApi(client = get()) }
+
     single<AddonPersistence> { addonPersistence(api = get(), addonService = get()) }
 
-    single<Stremio> { stremio(api = get(), addonPersistence = get(), logger = getWith("Stremio")) }
+    single<StremioRepository> {
+        stremioRepository(
+            stremioApi = get(),
+            addonPersistence = get(),
+            logger = getWith("StremioRepository"),
+        )
+    }
+
+    single<AddonRepository> {
+        addonRepository(
+            addonApi = get(),
+            addonPersistence = get(),
+            logger = getWith("AddonRepository"),
+        )
+    }
 }
 
 private val viewModelModule = module {
-    single<HomeViewModel> { HomeViewModel(stremio = get(), addonPersistence = get()) }
+    single<HomeViewModel> { HomeViewModel(stremioRepository = get(), addonRepository = get()) }
 }

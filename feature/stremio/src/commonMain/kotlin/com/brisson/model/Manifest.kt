@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class Manifest(
     val id: String,
     val name: String,
-    val description: String,
+    val description: String?,
     val logo: String?,
     val resources: List<ResourceType>?,
     val types: List<String>,
@@ -21,7 +21,11 @@ private fun Manifest.generateUrl(
 ): Map<String, String>? {
     return catalogs?.mapNotNull { catalog ->
         urlProvider(catalog, addonBaseUrl)?.let { url ->
-            val title = "${catalog.type} - ${this.name}: ${catalog.name}"
+            val title = StringBuilder().apply {
+                append(catalog.type)
+                append("- $name")
+                catalog.name?.let { append(": ${catalog.name}") }
+            }.toString()
             mapOf(title to url)
         }
     }?.flatMap { it.entries }?.associate { it.toPair() }

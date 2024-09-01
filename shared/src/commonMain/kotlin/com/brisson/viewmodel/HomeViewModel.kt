@@ -1,14 +1,14 @@
 package com.brisson.viewmodel
 
 import com.brisson.model.Meta
-import com.brisson.repository.AddonPersistence
-import com.brisson.repository.Stremio
+import com.brisson.repository.AddonRepository
+import com.brisson.repository.StremioRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val stremio: Stremio,
-    private val addonPersistence: AddonPersistence,
+    private val stremioRepository: StremioRepository,
+    private val addonRepository: AddonRepository,
 ) : ViewModel() {
     private val mutableHomeState: MutableStateFlow<HomeViewState> =
         MutableStateFlow(HomeViewState.Initial)
@@ -16,7 +16,7 @@ class HomeViewModel(
 
     init {
         viewmodelScope.launch {
-            addonPersistence.saveAddon(
+            addonRepository.installAddon(
                 "v3-cinemeta.strem.io",
                 "150203dd784e-cinetorrent-addon.baby-beamup.club"
             )
@@ -28,7 +28,7 @@ class HomeViewModel(
         mutableHomeState.update { HomeViewState.Loading }
         logger.i { "Loading home catalog" }
         viewmodelScope.launch {
-            stremio.homePageCatalog()
+            stremioRepository.homePageCatalog()
                 .onEach { result ->
                     mutableHomeState.update {
                         when (it) {
@@ -56,7 +56,7 @@ class HomeViewModel(
         mutableHomeState.update { HomeViewState.Loading }
         logger.i { "Searching query \"$query\"" }
         viewmodelScope.launch {
-            stremio.search(query)
+            stremioRepository.search(query)
                 .onEach { result ->
                     result.mapValues { it.value.metas }.let { sections ->
                         mutableHomeState.update {

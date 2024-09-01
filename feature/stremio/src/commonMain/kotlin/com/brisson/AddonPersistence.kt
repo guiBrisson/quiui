@@ -1,4 +1,4 @@
-package com.brisson.repository
+package com.brisson
 
 import co.touchlab.kermit.Logger
 import com.brisson.api.StremioApi
@@ -10,8 +10,8 @@ import kotlinx.serialization.json.Json
 
 
 interface AddonPersistence {
-    suspend fun loadAddons(): List<Addon>
-    suspend fun saveAddon(vararg addonBaseUrl: String)
+    suspend fun loadInstalledAddons(): List<Addon>
+    suspend fun installAddon(vararg addonBaseUrl: String)
 }
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -21,7 +21,7 @@ fun addonPersistence(
 ) = object : AddonPersistence {
     private val json = Json { ignoreUnknownKeys = true; explicitNulls = false }
 
-    override suspend fun loadAddons(): List<Addon> {
+    override suspend fun loadInstalledAddons(): List<Addon> {
         return addonService.getAllAddons().map {
             val baseUrl = it.transportUrl.removePrefix("https://").substringBefore("/")
             val manifest = json.decodeFromString<Manifest>(it.manifest)
@@ -29,8 +29,8 @@ fun addonPersistence(
         }
     }
 
-    //TODO: maybe I should check if the addon is already saved before saving it?
-    override suspend fun saveAddon(vararg addonBaseUrl: String) {
+    //TODO: maybe I should check if the addon is already saved before fetching the api?
+    override suspend fun installAddon(vararg addonBaseUrl: String) {
         addonBaseUrl.forEach { baseUrl ->
             val serializedManifest = api.getManifestAsText(baseUrl)
             addonService.saveAddon(
@@ -47,9 +47,9 @@ fun addonPersistenceInMemory(
 ) = object : AddonPersistence {
     private val _addons = mutableListOf<Addon>()
 
-    override suspend fun loadAddons(): List<Addon> = _addons
+    override suspend fun loadInstalledAddons(): List<Addon> = _addons
 
-    override suspend fun saveAddon(vararg addonBaseUrl: String) {
+    override suspend fun installAddon(vararg addonBaseUrl: String) {
         addonBaseUrl.forEach { baseUrl ->
             val manifest = api.getManifest(baseUrl)
             val addon = Addon(baseUrl, manifest)
