@@ -29,10 +29,11 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(projects.shared)
+            implementation(projects.compose.designSystem)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
