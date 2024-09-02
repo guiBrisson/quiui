@@ -10,12 +10,12 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.material.TextField
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,7 +40,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun App() {
     QuiuiTheme {
-        Surface(color = MaterialTheme.colors.background) {
+        Surface(color = MaterialTheme.colorScheme.background) {
             HomeRoute(modifier = Modifier.fillMaxSize())
         }
     }
@@ -103,7 +103,11 @@ private fun HomeScreen(
                                     resource = painterResource,
                                     contentDescription = null,
                                     contentScale = ContentScale.Crop,
-                                    onLoading = { progress -> CircularProgressIndicator(progress) },
+                                    onLoading = { progress ->
+                                        CircularProgressIndicator(
+                                            progress = { progress },
+                                        )
+                                    },
                                 )
                             }
                         }
