@@ -1,5 +1,6 @@
 package com.brisson.viewmodel
 
+import androidx.lifecycle.viewModelScope
 import com.brisson.model.Meta
 import com.brisson.repository.AddonRepository
 import com.brisson.repository.StremioRepository
@@ -15,7 +16,7 @@ class HomeViewModel(
     val homeState: StateFlow<HomeViewState> = mutableHomeState.asStateFlow()
 
     init {
-        viewmodelScope.launch {
+        viewModelScope.launch {
             addonRepository.installAddon(
                 "v3-cinemeta.strem.io",
                 "150203dd784e-cinetorrent-addon.baby-beamup.club"
@@ -27,7 +28,7 @@ class HomeViewModel(
     fun getHomeCatalog() {
         mutableHomeState.update { HomeViewState.Loading }
         logger.i { "Loading home catalog" }
-        viewmodelScope.launch {
+        viewModelScope.launch {
             stremioRepository.homePageCatalog()
                 .onEach { result ->
                     mutableHomeState.update {
@@ -55,7 +56,7 @@ class HomeViewModel(
 
         mutableHomeState.update { HomeViewState.Loading }
         logger.i { "Searching query \"$query\"" }
-        viewmodelScope.launch {
+        viewModelScope.launch {
             stremioRepository.search(query)
                 .onEach { result ->
                     result.mapValues { it.value.metas }.let { sections ->

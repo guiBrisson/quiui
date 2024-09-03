@@ -51,6 +51,7 @@ kotlin {
             api(projects.core.database)
             api(projects.feature.stremio)
 
+            implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.ktor.client.core)
             implementation(libs.koin.core)
