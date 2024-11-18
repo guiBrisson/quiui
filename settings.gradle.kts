@@ -29,7 +29,6 @@ dependencyResolutionManagement {
 }
 
 include(":shared")
-include(":compose:app")
-include(":compose:designSystem")
+include(":app:cli")
 include(":feature:stremio")
 include(":core:database")
